@@ -6,6 +6,7 @@ const data = ['dWlhclDHdFvDCCDfFq','mGdZBZBwRGjZMFgvTvgtvv','jwwJrzdzGdSbGGnNlzW
 const testData = ['vJrwpWtwJgWrhcsFMMfFFhFp','jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL','PmmdzqPrVvPwwTWBwg','wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn','ttgJtRGJQctTZtZT','CrZsJsPPZsGzwwsLwLmpwMDw'];
 
 let prioritiesSumP1 = 0;
+let prioritiesSumP2 = 0;
 
 /**
  * @dev Checks if char is upper or lower case, assumes char === [A-Za-z]
@@ -19,7 +20,7 @@ function _isUpper(char) {
 /**
  * @dev Splits a string in half, returns an object with both halfs
  * @param {string} str
- * @returns
+ * @returns {object} Containing both halfs
  */
 function _splitInHalf(str) {
     const halfLength = Math.ceil(str.length / 2);
@@ -30,9 +31,10 @@ function _splitInHalf(str) {
 }
 
 /**
- * @dev Find the first common char between both strings
+ * @dev Find the first common char between two strings
  * @param {string} str1
  * @param {string} str2
+ * @returns {char} The first common char found in both strings
  */
 function _findCommonChar(str1, str2) {
     for (let i = 0; i < str1.length; i++) {
@@ -41,9 +43,24 @@ function _findCommonChar(str1, str2) {
 }
 
 /**
+ * @dev Find all common chars between two strings
+ * @param {string} str1
+ * @param {string} str2
+ * @returns {string} All the common chars between both strings
+ */
+function _findAllCommonChars(str1, str2) {
+    const commonChars = [];
+    str1.split("").map((char) => {
+        if (str2.includes(char) && !commonChars.includes(char))
+            commonChars.push(char);
+    });
+    return commonChars.join("");
+}
+
+/**
  * @dev Returns the priority of a char (according to the puzzle)
  * @param {char} char
- * @returns int, priority for the given char
+ * @returns {int}, priority for the given char
  */
 function _whatPriority(char) {
     const ascii_a = 97;
@@ -59,7 +76,6 @@ function _whatPriority(char) {
 }
 
 // Problem 1
-
 data.forEach((str) => {
     const { firstHalf, secondHalf } = _splitInHalf(str);
     const commonChar = _findCommonChar(firstHalf, secondHalf);
@@ -69,3 +85,10 @@ data.forEach((str) => {
 console.log(`Problem 1 solution: ${prioritiesSumP1}`);
 
 // Problem 2
+for (let i = 0; i < data.length; i += 3) {
+    const commonChars = _findAllCommonChars(data[i], data[i+1]);
+    const commonChar = _findCommonChar(commonChars, data[i+2]);
+    prioritiesSumP2 += _whatPriority(commonChar);
+}
+
+console.log(`Problem 2 solution: ${prioritiesSumP2}`);
